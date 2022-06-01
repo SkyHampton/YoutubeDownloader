@@ -1,4 +1,5 @@
 from pytube import YouTube
+import os
 
 while True:
     url = input("Enter the link to the youtube video, or quit/exit to close the program:\n")
@@ -15,4 +16,24 @@ while True:
             break
         else:
             print("Incorrect format type.")
+
+
+    yt = YouTube(url)
+    
+    if mp4:
+        ordered = yt.streams.order_by('resolution')
+        filtered = ordered.filter(progressive=True, file_extension="mp4")
+    else:
+        filtered = ordered.filter(only_audio=True)
+    
+    sorted = filtered.desc()
+    first = sorted.first()
+    path = os.getcwd() + "\\Downloads"
+    file = first.download(output_path = path)
+    if not mp4:
+        name, ext = os.path.splitext(file)
+        newFileName = name + ".mp3"
+        os.rename(file, newFileName)
+    print("Download successful, downloaded to + " + path + "\n")
+        
 
