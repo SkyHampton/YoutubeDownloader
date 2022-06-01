@@ -1,5 +1,7 @@
 from pytube import YouTube
+from validators import url as validateURL
 import os
+
 
 # get input until user types exit or quit
 while True:
@@ -7,8 +9,9 @@ while True:
     url = input("Enter the link to the youtube video, or quit/exit to close the program:\n")
     if url.lower() == "exit" or url.lower() == "quit":
         break
-
-    # get mp4/mp3 from user, keeps asking until they enter mp3 or mp4
+    
+    urlValid = validateURL(url)
+    # ask if user wants an mp3 or an mp4 file
     while True:
         format = input("Enter mp4 or mp3 for the download format:\n").lower()
         if format == "mp4":
@@ -24,13 +27,17 @@ while True:
     yt = YouTube(url)
     
     if mp4:
-        # order by resolution and get mp4 videos with both video and audio components
+        # get highest resolution mp4 video
         video = yt.streams.get_highest_resolution()
     else:
+        # get highest bitrate audio-only stream as an mp4
         video = yt.streams.get_audio_only()
     
+    # get current working directory and append \Downloads folder
     path = os.getcwd() + "\\Downloads"
+    # create \Downloads folder if it does not exsits and download video to that folder
     file = video.download(output_path = path)
+    # if a mp3 was requested, the file is changed to mp3 format
     if not mp4:
         name, ext = os.path.splitext(file)
         newFileName = name + ".mp3"
