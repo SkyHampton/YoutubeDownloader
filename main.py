@@ -46,6 +46,6 @@ while True:
             name, ext = os.path.splitext(file)
             newFileName = name + ".mp3"
             os.rename(file, newFileName)
-        print("Download successful, downloaded to + " + path + "\n")
+        print("Download successful, downloaded to " + path + "\n")
         
 
